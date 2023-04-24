@@ -1,0 +1,80 @@
+---
+# tasks file for init-server
+
+- name: Update and upgrade apt packages
+  ansible.builtin.apt:
+    # name: apache2
+    state: present
+    update_cache: yes
+    upgrade: yes
+
+- name: Install required system packages for docker
+  ansible.builtin.apt:
+    pkg:
+      - ca-certificates
+      - curl
+      - gnupg
+    state: latest
+    update_cache: yes
+
+- name: Add Docker GPG apt Key
+  ansible.builtin.apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add Docker Repository
+  ansible.builtin.apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu focal stable
+    state: present
+
+- name: Update apt and install docker-ce
+  ansible.builtin.apt:
+    pkg:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-compose-plugin
+      - docker-buildx-plugin
+    state: latest
+    update_cache: true
+
+- name: Add vm.overcommit_memory = 1 to /etc/sysctl.conf for redis
+  ansible.builtin.lineinfile:
+    path: /etc/sysctl.conf
+    search_string: 'vm.overcommit_memory'
+    line: vm.overcommit_memory = 1
+
+- name: reboot server
+  ansible.builtin.reboot:
+# name: Install required system packages for docker
+#   apt:
+#     pkg:
+#       - apt-transport-https
+#       - ca-certificates
+#       - curl
+#       - software-properties-common
+#       - python3-pip
+#       - virtualenv
+#       - python3-setuptools
+#     state: latest
+#     update_cache: true
+
+# name: Add Docker GPG apt Key
+#   apt_key:
+#     url: https://download.docker.com/linux/ubuntu/gpg
+#     state: present
+
+# name: Add Docker Repository
+#   apt_repository:
+#     repo: deb https://download.docker.com/linux/ubuntu focal stable
+#     state: present
+
+# name: Update apt and install docker-ce
+#   apt:
+#     name: docker-ce
+#     state: latest
+#     update_cache: true
+
+# name: Install Docker Module for Python
+#   pip:
+#     name: docker

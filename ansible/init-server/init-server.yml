@@ -1,0 +1,6 @@
+---
+- name: Init server, apt upgrade, install docker
+  hosts: servers
+  become: yes
+  roles:
+    - init-server

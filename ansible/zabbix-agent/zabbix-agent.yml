@@ -1,0 +1,6 @@
+---
+- name: Install Zabbix Agents on target hosts
+  hosts: zabbix-agents
+  become: yes
+  roles:
+    - zabbix-agent
